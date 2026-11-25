@@ -1,0 +1,37 @@
+<%- include("partials/header") %>
+<p><a href="/">← Mes notes</a></p>
+
+<article class="panel" aria-labelledby="note-title">
+  <h1 id="note-title"><%= note.title %></h1>
+  <% if (note.body) { %>
+    <p class="note-body"><%= note.body %></p>
+  <% } %>
+  <footer class="muted">
+    Créée le <time datetime="<%= note.created_at.toISOString() %>"><%= formatDate(note.created_at) %></time>
+    <% if (note.updated_at) { %>
+      · modifiée le <time datetime="<%= note.updated_at.toISOString() %>"><%= formatDate(note.updated_at) %></time>
+    <% } %>
+  </footer>
+</article>
+
+<section class="panel" aria-labelledby="edit-title">
+  <h2 id="edit-title">Modifier</h2>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/notes/<%= note.id %>">
+    <label for="title">Titre</label>
+    <input id="title" name="title" type="text" required maxlength="120" value="<%= form.title %>">
+    <label for="body">Contenu</label>
+    <textarea id="body" name="body" rows="6" maxlength="5000"><%= form.body %></textarea>
+    <button type="submit">Enregistrer</button>
+  </form>
+</section>
+
+<section class="panel" aria-labelledby="delete-title">
+  <h2 id="delete-title">Supprimer</h2>
+  <form method="post" action="/notes/<%= note.id %>/delete">
+    <button class="danger" type="submit">Supprimer la note</button>
+  </form>
+</section>
+<%- include("partials/footer") %>

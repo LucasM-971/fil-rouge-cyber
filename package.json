@@ -1,0 +1,22 @@
+{
+  "name": "rempart",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rempart — application web sécurisée (projet Cyber Sécu B3)",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test tests/unit/*.test.js",
+    "test:integration": "NODE_EXTRA_CA_CERTS=\"$(mkcert -CAROOT)/rootCA.pem\" node --test tests/integration/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "argon2": "^0.45.2",
+    "ejs": "^3.1.10",
+    "express": "^5.3.0",
+    "multer": "^2.5.0",
+    "pg": "^8.13.1",
+    "qrcode": "^1.5.4"
+  }
+}

@@ -1,0 +1,28 @@
+<%- include("partials/header") %>
+<section class="panel narrow" aria-labelledby="account-title">
+  <h1 id="account-title">Mon compte</h1>
+  <dl>
+    <dt>Adresse e-mail</dt>
+    <dd><%= account.email %></dd>
+    <dt>Inscrit le</dt>
+    <dd><%= formatDate(account.created_at) %></dd>
+    <dt>Données enregistrées</dt>
+    <dd><%= account.notes %> note(s), <%= account.files %> fichier(s)</dd>
+  </dl>
+</section>
+
+<section class="panel narrow" aria-labelledby="delete-title">
+  <h2 id="delete-title">Supprimer mon compte</h2>
+  <p>La suppression est définitive. Sont effacés : votre adresse e-mail, votre mot de passe haché, vos notes, vos fichiers, votre configuration 2FA et toutes vos sessions ouvertes.</p>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/account/delete">
+    <label for="password">Mot de passe</label>
+    <input id="password" name="password" type="password" required maxlength="128" autocomplete="current-password">
+    <label for="confirmation">Tapez <strong><%= confirmation %></strong> pour confirmer</label>
+    <input id="confirmation" name="confirmation" type="text" required maxlength="20" autocomplete="off" pattern="<%= confirmation %>">
+    <button class="danger" type="submit">Supprimer définitivement mon compte</button>
+  </form>
+</section>
+<%- include("partials/footer") %>

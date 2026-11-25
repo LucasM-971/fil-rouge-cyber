@@ -1,0 +1,50 @@
+<%- include("partials/header") %>
+<h1>Mes fichiers</h1>
+
+<section class="panel" aria-labelledby="upload-title">
+  <h2 id="upload-title">Envoyer un fichier</h2>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/files" enctype="multipart/form-data">
+    <label for="file">Fichier</label>
+    <input id="file" name="file" type="file" required accept="<%= accept %>" aria-describedby="file-help">
+    <p id="file-help" class="muted">PNG, JPEG ou PDF · 2 Mo maximum</p>
+    <button type="submit">Envoyer</button>
+  </form>
+</section>
+
+<section aria-labelledby="files-title">
+  <h2 id="files-title">Fichiers envoyés</h2>
+  <% if (files.length === 0) { %>
+    <p class="muted">Aucun fichier.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Nom</th>
+          <th scope="col">Type</th>
+          <th scope="col">Taille</th>
+          <th scope="col">Ajouté le</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% files.forEach((file) => { %>
+          <tr>
+            <td><a href="/files/<%= file.id %>" download><%= file.original_name %></a></td>
+            <td><%= file.mime %></td>
+            <td><%= formatSize(file.size) %></td>
+            <td><time datetime="<%= file.created_at.toISOString() %>"><%= formatDate(file.created_at) %></time></td>
+            <td>
+              <form method="post" action="/files/<%= file.id %>/delete">
+                <button class="danger small" type="submit" aria-label="Supprimer <%= file.original_name %>">Supprimer</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

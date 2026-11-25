@@ -1,0 +1,18 @@
+{
+	auto_https off
+}
+
+(app) {
+	header -Server
+	reverse_proxy app:8000
+}
+
+https://localhost {
+	tls /certs/localhost.pem /certs/localhost-key.pem
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	import app
+}
+
+http://localhost {
+	redir https://localhost:8443{uri} 308
+}

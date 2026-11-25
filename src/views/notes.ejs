@@ -1,0 +1,52 @@
+<%- include("partials/header") %>
+<h1>Mes notes</h1>
+
+<section class="panel" aria-labelledby="new-note-title">
+  <h2 id="new-note-title">Nouvelle note</h2>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/notes">
+    <label for="title">Titre</label>
+    <input id="title" name="title" type="text" required maxlength="120" value="<%= form.title %>">
+    <label for="body">Contenu</label>
+    <textarea id="body" name="body" rows="4" maxlength="5000"><%= form.body %></textarea>
+    <button type="submit">Publier</button>
+  </form>
+</section>
+
+<section aria-labelledby="notes-title">
+  <h2 id="notes-title">Toutes les notes</h2>
+  <search>
+    <form class="inline" method="get" action="/">
+      <label for="q">Rechercher</label>
+      <input id="q" name="q" type="search" maxlength="100" value="<%= q %>">
+      <button type="submit">Rechercher</button>
+    </form>
+  </search>
+
+  <% if (q) { %>
+    <p class="muted" role="status"><%= notes.length %> résultat(s) pour « <%= q %> »</p>
+  <% } %>
+
+  <% if (notes.length === 0) { %>
+    <p class="muted">Aucune note.</p>
+  <% } else { %>
+    <ul class="cards">
+      <% notes.forEach((note) => { %>
+        <li>
+          <article class="card">
+            <h3><a href="/notes/<%= note.id %>"><%= note.title %></a></h3>
+            <% if (note.body) { %>
+              <p class="note-body"><%= note.body %></p>
+            <% } %>
+            <footer>
+              <time datetime="<%= note.created_at.toISOString() %>"><%= formatDate(note.created_at) %></time>
+            </footer>
+          </article>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

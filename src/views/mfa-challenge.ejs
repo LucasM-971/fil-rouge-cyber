@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<section class="panel narrow" aria-labelledby="mfa-title">
+  <h1 id="mfa-title">Vérification à deux facteurs</h1>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/2fa/challenge">
+    <label for="code">Code authentificateur ou code de secours</label>
+    <input id="code" name="code" type="text" required maxlength="20" autocomplete="one-time-code" autofocus>
+    <button type="submit">Valider</button>
+  </form>
+  <p class="muted">Appareil indisponible ? Saisissez un de vos codes de secours.</p>
+</section>
+<%- include("partials/footer") %>

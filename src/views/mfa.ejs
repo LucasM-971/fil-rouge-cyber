@@ -1,0 +1,42 @@
+<%- include("partials/header") %>
+<section class="panel narrow" aria-labelledby="mfa-title">
+  <h1 id="mfa-title">Authentification à deux facteurs</h1>
+  <% if (notice) { %>
+    <p class="notice" role="status"><%= notice %></p>
+  <% } %>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+
+  <% if (enabled) { %>
+    <p>La double authentification est activée pour votre compte.</p>
+    <% if (codes) { %>
+      <h2>Codes de secours</h2>
+      <p class="notice">Ces codes ne seront plus affichés. Chacun ne sert qu'une fois. Conservez-les en lieu sûr.</p>
+      <ul>
+        <% codes.forEach((code) => { %>
+          <li><code><%= code %></code></li>
+        <% }) %>
+      </ul>
+    <% } %>
+    <form class="stack" method="post" action="/2fa/disable">
+      <label for="password">Mot de passe pour désactiver</label>
+      <input id="password" name="password" type="password" required maxlength="128" autocomplete="current-password">
+      <button class="danger" type="submit">Désactiver la 2FA</button>
+    </form>
+  <% } else { %>
+    <p>Scannez ce QR code avec votre application d'authentification (Google Authenticator, Proton Authenticator, Aegis, Ente, etc.).</p>
+    <% if (qr) { %>
+      <img src="<%= qr %>" alt="QR code TOTP" width="240" height="240">
+    <% } %>
+    <% if (secret) { %>
+      <p><strong>Clé manuelle :</strong> <code><%= secret %></code></p>
+    <% } %>
+    <form class="stack" method="post" action="/2fa/setup">
+      <label for="code">Premier code à six chiffres</label>
+      <input id="code" name="code" type="text" required maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" inputmode="numeric">
+      <button type="submit">Activer</button>
+    </form>
+  <% } %>
+</section>
+<%- include("partials/footer") %>

@@ -1,0 +1,16 @@
+<%- include("partials/header") %>
+<section class="panel" aria-labelledby="error-title">
+  <h1 id="error-title"><%= title %></h1>
+  <p><%= message %></p>
+  <% if (reference) { %>
+    <p class="muted">Référence : <code><%= reference %></code></p>
+  <% } %>
+  <% if (details) { %>
+    <details>
+      <summary>Détails (développement uniquement)</summary>
+      <pre><%= details %></pre>
+    </details>
+  <% } %>
+  <p><a href="/">Retour à l'accueil</a></p>
+</section>
+<%- include("partials/footer") %>

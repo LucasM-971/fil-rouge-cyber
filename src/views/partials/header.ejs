@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> · Rempart</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Rempart</a>
+    <nav aria-label="Navigation principale">
+      <ul>
+        <% if (locals.user) { %>
+          <li><a href="/" aria-current="<%= current === 'notes' ? 'page' : 'false' %>">Notes</a></li>
+          <li><a href="/files" aria-current="<%= current === 'files' ? 'page' : 'false' %>">Fichiers</a></li>
+          <li><a href="/2fa/setup" aria-current="<%= current === 'mfa' ? 'page' : 'false' %>">Sécurité 2FA</a></li>
+          <li><a href="/account" aria-current="<%= current === 'account' ? 'page' : 'false' %>">Mon compte</a></li>
+          <% if (locals.user.role === 'admin') { %>
+            <li><a href="/admin" aria-current="<%= current === 'admin' ? 'page' : 'false' %>">Admin</a></li>
+          <% } %>
+        <% } else { %>
+          <li><a href="/login" aria-current="<%= current === 'login' ? 'page' : 'false' %>">Connexion</a></li>
+          <li><a href="/register" aria-current="<%= current === 'register' ? 'page' : 'false' %>">Inscription</a></li>
+        <% } %>
+      </ul>
+    </nav>
+    <% if (locals.user) { %>
+      <form class="account" method="post" action="/logout">
+        <span class="muted"><%= locals.user.email %></span>
+        <button class="secondary" type="submit">Déconnexion</button>
+      </form>
+    <% } %>
+  </header>
+  <main>

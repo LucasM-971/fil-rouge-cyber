@@ -1,0 +1,19 @@
+<%- include("partials/header") %>
+<section class="panel narrow" aria-labelledby="register-title">
+  <h1 id="register-title">Créer un compte</h1>
+  <% if (error) { %>
+    <p class="alert" role="alert"><%= error %></p>
+  <% } %>
+  <form class="stack" method="post" action="/register">
+    <label for="email">Adresse e-mail</label>
+    <input id="email" name="email" type="email" required maxlength="254" autocomplete="email" value="<%= email %>">
+    <label for="password">Mot de passe</label>
+    <input id="password" name="password" type="password" required minlength="<%= minLength %>" maxlength="<%= maxLength %>" autocomplete="new-password" aria-describedby="password-help">
+    <p id="password-help" class="muted">Au moins <%= minLength %> caractères. Une phrase de passe fonctionne très bien.</p>
+    <label for="confirmation">Confirmer le mot de passe</label>
+    <input id="confirmation" name="confirmation" type="password" required minlength="<%= minLength %>" maxlength="<%= maxLength %>" autocomplete="new-password">
+    <button type="submit">Créer le compte</button>
+  </form>
+  <p class="muted">Déjà inscrit ? <a href="/login">Se connecter</a></p>
+</section>
+<%- include("partials/footer") %>

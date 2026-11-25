@@ -1,0 +1,58 @@
+services:
+  proxy:
+    image: caddy:2.8-alpine
+    ports:
+      - "127.0.0.1:8000:80"
+      - "127.0.0.1:8443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certs:/certs:ro
+      - caddy-data:/data
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  app:
+    build: .
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${APP_DB_USER}
+      DB_PASSWORD: ${APP_DB_PASSWORD:?APP_DB_PASSWORD manquant dans .env}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+    volumes:
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - uploads:/data/uploads
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:17-alpine
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  uploads:
+  caddy-data:
